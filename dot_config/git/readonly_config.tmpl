@@ -1,6 +1,11 @@
 [commit]
 	gpgSign = true
 
+{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
+[include]
+  path = ./work_config
+{{ end }}
+
 [core]
 	autocrlf = "input"
 	editor = "vim"
@@ -29,12 +34,7 @@
 [tag]
 	gpgSign = false
 
-[url "git@gitlab.disney.com:"]
-	insteadOf = "https://gitlab.disney.com/"
-
 [user]
 	email = {{ .email | quote }}
 	name = {{ .name | quote }}
-{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
-	signingKey = {{ onepasswordRead "op://Private/Disney SSH/public key" | quote }}
-{{- end }}
+
