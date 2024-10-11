@@ -1,4 +1,5 @@
-# shellcheck disable=all
+#!/bin/zsh
+
 # zsh options
 setopt HIST_FCNTL_LOCK        # Use OS X FCNTL locking to avoid race conditions when writing to history files
 setopt HIST_IGNORE_DUPS
@@ -8,11 +9,6 @@ setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate entries first when trimming his
 setopt SHARE_HISTORY          # Share history between all sessions
 setopt EXTENDED_HISTORY       # Save each command's start timestamp and the duration to the history file after it was executed
 unsetopt autocd               # cd is a command, not a directory
-
-# Export environment variables
-# Don't use zshenv, it will be sourced before /etc/zprofile which resets PATH, etc.
-export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
-export ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
 
 # use vim as default editor, vscode as visual editor
 export VISUAL="code"
