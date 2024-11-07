@@ -1,0 +1,40 @@
+[commit]
+	gpgSign = true
+
+{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
+[include]
+  path = ./work_config
+{{ end }}
+
+[core]
+	autocrlf = "input"
+	editor = "vim"
+
+[filter "lfs"]
+	clean = "git-lfs clean -- %f"
+	process = "git-lfs filter-process"
+	required = true
+	smudge = "git-lfs smudge -- %f"
+
+[gpg]
+	format = "ssh"
+
+[gpg "ssh"]
+	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+
+[init]
+	defaultBranch = "main"
+
+[pull]
+	rebase = true
+
+[rebase]
+	autoStash = true
+
+[tag]
+	gpgSign = false
+
+[user]
+	email = {{ .email | quote }}
+	name = {{ .name | quote }}
+

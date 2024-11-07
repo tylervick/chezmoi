@@ -1,0 +1,37 @@
+#!/bin/zsh
+
+# zsh options
+setopt HIST_FCNTL_LOCK        # Use OS X FCNTL locking to avoid race conditions when writing to history files
+setopt HIST_IGNORE_DUPS
+unsetopt HIST_IGNORE_ALL_DUPS
+setopt HIST_IGNORE_SPACE      # Ignore commands that start with space
+setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate entries first when trimming history
+setopt SHARE_HISTORY          # Share history between all sessions
+setopt EXTENDED_HISTORY       # Save each command's start timestamp and the duration to the history file after it was executed
+unsetopt autocd               # cd is a command, not a directory
+
+# use vim as default editor, vscode as visual editor
+export VISUAL="code"
+export EDITOR="vim"
+
+# ensure that path entries are unique
+typeset -gU path cdpath fpath manpath
+
+# Source zstyles you might use with antidote.
+[[ -e ${ZDOTDIR:-$HOME}/.zstyles ]] && source ${ZDOTDIR:-$HOME}/.zstyles
+
+# Autoload functions you might want to use with antidote.
+ZFUNCDIR=${ZDOTDIR:-$HOME}/functions
+fpath=($ZFUNCDIR $fpath)
+autoload -Uz $fpath[1]/*(.:t)
+
+# source antidote from brew
+[[ ! -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]] || source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
+# TODO: determine fallback behavior
+antidote load
+
+# enable CTRL-T, ALT-C, CTRL-R & fuzzy completion from fzf
+# fzf is installed via brew, but not easily available in antidote: https://github.com/mattmc3/antidote/issues/112
+source <(fzf --zsh)
+
+# Named Directory Hashes

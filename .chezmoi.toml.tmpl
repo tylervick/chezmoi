@@ -1,0 +1,28 @@
+# -*-mode:conf-toml-*- vim:ft=toml
+
+# ~/.local/share/chezmoi/.chezmoi.toml.tmpl
+# =============================================================================
+# Used to customize configuration when doing a `chezmoi init`.
+#
+# This template file will trigger prompts to fill-in machine-specific
+# templateable values. The resulting file is then created at
+# `~/.config/chezmoi/chezmoi.toml`
+# See https://www.chezmoi.io/docs/how-to/
+#
+# {{- /* This file supports Go's text/template language. */}}
+
+# {{- $email := promptString "email address for the user, used for git, aws, etc." }}
+# {{- $name := promptString "full name of user" }}
+# {{- $hostname := promptString "hostname of the machine" }}
+# {{- $age_identity := promptString "age identity key" }}
+# {{- $age_recipient := promptString "age recipient key" }}
+
+[data]
+    email = "{{ $email }}"
+    name = "{{ $name }}"
+    hostname = "{{ $hostname }}"
+
+encryption = "age"
+[age]
+    identity = "{{ $age_identity }}"
+    recipient = "{{ $age_recipient }}"
