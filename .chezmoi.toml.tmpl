@@ -16,13 +16,13 @@
 # {{- $hostname := promptString "hostname of the machine" }}
 # {{- $age_identity := promptString "age identity key" }}
 # {{- $age_recipient := promptString "age recipient key" }}
+encryption = "age"
 
 [data]
     email = "{{ $email }}"
     name = "{{ $name }}"
     hostname = "{{ $hostname }}"
 
-encryption = "age"
 [age]
     identity = "{{ $age_identity }}"
     recipient = "{{ $age_recipient }}"

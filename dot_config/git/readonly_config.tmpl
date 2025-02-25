@@ -1,14 +1,26 @@
+[branch]
+	sort = -committerdate
+
+[column]
+	ui = auto
+
 [commit]
 	gpgSign = true
 
-{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
-[include]
-  path = ./work_config
-{{ end }}
-
 [core]
-	autocrlf = "input"
-	editor = "vim"
+	autocrlf = input
+	editor = vim
+
+[diff]
+	algorithm = histogram
+	colorMoved = plain
+	mnemonicPrefix = true
+	renames = true
+
+[fetch]
+	prune = true
+	pruneTags = true
+	all = true
 
 [filter "lfs"]
 	clean = "git-lfs clean -- %f"
@@ -17,24 +29,43 @@
 	smudge = "git-lfs smudge -- %f"
 
 [gpg]
-	format = "ssh"
+	format = ssh
 
 [gpg "ssh"]
 	program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
 
+[help]
+	autocorrect = prompt
+
+{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
+[include]
+  path = ./work_config
+{{ end }}
+
 [init]
-	defaultBranch = "main"
+	defaultBranch = main
 
 [pull]
 	rebase = true
 
+[push]
+	autoSetupRemote = true
+	default = simple
+	followTags = true
+
 [rebase]
+	autoSquash = true
 	autoStash = true
+	updateRefs = true
+
+[rerere]
+	enabled = true
+	autoupdate = true
 
 [tag]
 	gpgSign = false
+	sort = version:refname
 
 [user]
 	email = {{ .email | quote }}
 	name = {{ .name | quote }}
-
