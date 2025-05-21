@@ -37,11 +37,6 @@
 [help]
 	autocorrect = prompt
 
-{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
-[include]
-  path = ./work_config
-{{ end }}
-
 [init]
 	defaultBranch = main
 
@@ -69,3 +64,9 @@
 [user]
 	email = {{ .email | quote }}
 	name = {{ .name | quote }}
+	signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGQ06nyBQeEateYlG8ATFvq81IyBmC3WIfHWqqqcAb/g"
+
+{{- if eq .chezmoi.hostname "FQX3KVDXR7" }}
+[includeIf "gitdir:~/Documents/Disney/"]
+  path = ./work_config
+{{ end }}
