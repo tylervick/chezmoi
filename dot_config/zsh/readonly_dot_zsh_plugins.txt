@@ -65,6 +65,7 @@ $ZDOTDIR/conf.d/history.zsh
 $ZDOTDIR/conf.d/asdf.zsh
 $ZDOTDIR/conf.d/jira.zsh
 $ZDOTDIR/conf.d/rustup.zsh
+$ZDOTDIR/conf.d/colima.zsh
 
 ### Local Plugins with Variables
 #
