@@ -4,7 +4,6 @@
 #
 # See https://github.com/Homebrew/homebrew-bundle
 
-tap "homebrew/bundle"
 tap "oven-sh/bun"
 tap "ankitpokhrel/jira-cli"
 
@@ -16,6 +15,7 @@ brew "antidote"
 brew "asdf"
 brew "ast-grep"
 brew "awscli"
+brew "bat"
 brew "btop"
 brew "bun"
 brew "chezmoi"
@@ -24,6 +24,9 @@ brew "coreutils"
 brew "docker"
 brew "docker-compose"
 brew "docker-credential-helper"
+brew "duf"
+brew "dust"
+brew "eza"
 brew "fd"
 brew "ffmpeg"
 brew "fzf"
@@ -103,6 +106,7 @@ cask "utm"
 cask "visual-studio-code"
 cask "vlc"
 cask "warp"
+cask "yaak"
 
 # // 3/11/25 - disable vscode extensions, we'll manage this via vscode profiles/devcontainers
 # vscode "4ops.packer"
