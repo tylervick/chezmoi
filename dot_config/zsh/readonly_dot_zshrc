@@ -11,7 +11,7 @@ setopt EXTENDED_HISTORY       # Save each command's start timestamp and the dura
 unsetopt autocd               # cd is a command, not a directory
 
 # use vim as default editor, vscode as visual editor
-export VISUAL="code"
+export VISUAL="cursor --wait"
 export EDITOR="vim"
 
 # ensure that path entries are unique

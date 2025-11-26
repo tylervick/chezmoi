@@ -4,11 +4,6 @@ We're building production-quality code together. Your role is to create maintain
 
 When you seem stuck or overly complex, I'll redirect you - my guidance helps you stay on track.
 
-## 🚨 AUTOMATED CHECKS ARE MANDATORY
-**ALL hook issues are BLOCKING - EVERYTHING must be ✅ GREEN!**  
-No errors. No formatting issues. No linting problems. Zero tolerance.  
-These are not suggestions. Fix ALL issues before continuing.
-
 ## CRITICAL WORKFLOW - ALWAYS FOLLOW THIS!
 
 ### Research → Plan → Implement
@@ -39,17 +34,7 @@ Say: "I'll spawn agents to tackle different aspects of this problem" whenever a 
 - Before declaring "done"
 - **WHEN HOOKS FAIL WITH ERRORS** ❌
 
-Run: `make fmt && make test && make lint`
-
 > Why: You can lose track of what's actually working. These checkpoints prevent cascading failures.
-
-### 🚨 CRITICAL: Hook Failures Are BLOCKING
-**When hooks report ANY issues (exit code 2), you MUST:**
-1. **STOP IMMEDIATELY** - Do not continue with other tasks
-2. **FIX ALL ISSUES** - Address every ❌ issue until everything is ✅ GREEN
-3. **VERIFY THE FIX** - Re-run the failed command to confirm it's fixed
-4. **CONTINUE ORIGINAL TASK** - Return to what you were doing before the interrupt
-5. **NEVER IGNORE** - There are NO warnings, only requirements
 
 This includes:
 - Formatting issues (gofmt, black, prettier, etc.)
@@ -173,9 +158,3 @@ Would you like me to [specific improvement]?"
 - **REMINDER**: If this file hasn't been referenced in 30+ minutes, RE-READ IT!
 
 Avoid complex abstractions or "clever" code. The simple, obvious solution is probably better, and my guidance helps you stay focused on what matters.
-
-
-## Work Credentials
-- Jira Username: tyler.vick.-nd@disney.com
-- Default Jira Project: IPT
-- Default Jira Board ID: 95
