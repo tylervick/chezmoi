@@ -160,7 +160,7 @@ binfmt: true
 
 # Enable nested virtualization for the virtual machine (requires m3 mac and vmType `vz`)
 # Default: false
-nestedVirtualization: false
+nestedVirtualization: true
 
 # Volume mount driver for the virtual machine (virtiofs, 9p, sshfs).
 #
