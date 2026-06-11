@@ -65,7 +65,9 @@ $ZDOTDIR/.aliases
 $ZDOTDIR/.p10k.zsh
 $ZDOTDIR/conf.d/brew.zsh
 $ZDOTDIR/conf.d/history.zsh
-$ZDOTDIR/conf.d/asdf.zsh
+# disabling asdf for now, using mise instead
+# $ZDOTDIR/conf.d/asdf.zsh
+# $ZDOTDIR/conf.d/mise.zsh
 $ZDOTDIR/conf.d/jira.zsh
 $ZDOTDIR/conf.d/rustup.zsh
 $ZDOTDIR/conf.d/colima.zsh
@@ -159,10 +161,12 @@ ohmyzsh/ohmyzsh path:lib
 # ohmyzsh/ohmyzsh path:plugins/fancy-ctrl-z
 
 ohmyzsh/ohmyzsh path:plugins/alias-finder
-ohmyzsh/ohmyzsh path:plugins/asdf
+# disabling asdf for now, using mise instead
+# ohmyzsh/ohmyzsh path:plugins/asdf
 # disabling git for now, disabling aliases doesn't work
 # ohmyzsh/ohmyzsh path:plugins/git
 ohmyzsh/ohmyzsh path:plugins/golang
+ohmyzsh/ohmyzsh path:plugins/mise
 ohmyzsh/ohmyzsh path:plugins/python
 ohmyzsh/ohmyzsh path:plugins/rust
 ohmyzsh/ohmyzsh path:plugins/zoxide

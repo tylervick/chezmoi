@@ -1,0 +1,13 @@
+[tools]
+emsdk = "4.0.19"
+go = "1.24.0"
+node = "lts-krypton"
+python = "3.12.11"
+rust = "1.80.1"
+
+[settings]
+idiomatic_version_file_enable_tools = ["node"]
+
+[env]
+# Go module cache, so we don't need to pollute the home directory
+GOMODCACHE = "~/.cache/go/mod"
