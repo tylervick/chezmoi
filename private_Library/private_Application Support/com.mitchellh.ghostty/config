@@ -1,0 +1,4 @@
+copy-on-select = true
+keybind = command+k=text:\x0c
+keybind = shift+enter=text:\n
+cursor-click-to-move = true
