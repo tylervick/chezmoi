@@ -1,73 +1,97 @@
 #!/bin/zsh
 #
-# .aliases
+# .aliases — curated interactive aliases & small functions
+#
+# Loaded as a local antidote plugin. Grouped by area. Prefer functions over
+# aliases where logic/args are involved.
 #
 
-alias -- '-- -'='cd -'
-alias -- '..'='cd ..'
-alias -- '...'='cd ../..'
-alias -- '....'='cd ../../..'
-alias -- '.....'='cd ../../../..'
-alias -- 'b64'='pbpaste | base64 --decode'
-alias -- 'cd..'='cd ..'
-alias -- 'cp'='cp -v'
-alias -- 'd'='docker'
-alias -- 'dc'='docker compose'
-alias -- 'flushdns'='dscacheutil -flushcache'
-alias -- 'g'='git'
-alias -- 'gam'='git commit -am'
-alias -- 'gap'='git add -p'
-alias -- 'gb'='git branch'
-alias -- 'gbr'='git branch --no-color | sed -e '\''/^[^*]/d'\'' -e '\''s/* \(.*\)/\1/'\'''
-alias -- 'gbt'='git_list_branches'
-alias -- 'gc'='git checkout'
-alias -- 'gchp'='git cherry-pick'
-alias -- 'gcl'='git clone'
-alias -- 'gcln'='git clean -xfd'
-alias -- 'gcm'='git checkout master'
-alias -- 'gcmp'='git checkout master && git pull origin master'
-alias -- 'gd'='git diff'
-alias -- 'gdtp'='git stash pop'
-alias -- 'gf'='git reflog'
-alias -- 'ggmp'='git checkout -'
-alias -- 'gl'='git log'
-alias -- 'glp5'='git log -5 --pretty --oneline'
-alias -- 'glsw'='git log -S'
-alias -- 'glt'='git log --all --graph --decorate --oneline --simplify-by-decoration'
-alias -- 'gm'='git commit -m'
-alias -- 'gp'='git push origin HEAD'
-alias -- 'gpo'='git push origin'
-alias -- 'gpt'='git push origin HEAD && git push --tags'
-alias -- 'gpu'='git pull origin HEAD --prune'
-alias -- 'gra'='git remote add'
-alias -- 'grok'='ngrok start rem.jsbin-dev.com static.rem.jsbin-dev.com learn.rem.jsbin-dev.com'
-alias -- 'grr'='git remote rm'
-alias -- 'gs'='git status'
-alias -- 'gsl'='git shortlog -sn'
-alias -- 'gss'='git status -s'
-alias -- 'gst'='git stash'
-alias -- 'gta'='git tag -a -m'
-alias -- 'gws'='git diff --shortstat "@{0 day ago}"'
-alias -- 'gwts'='git ls-files | xargs wc -l'
-alias -- 'ip'='dig +short myip.opendns.com @resolver1.opendns.com'
-alias -- 'k'='kubectl'
-alias -- 'killport'='(){kill $(lsof -t -i:$1);}'
-alias -- 'kp'='k get pods'
-alias -- 'localip'='ipconfig getifaddr en1'
-alias -- 'mv'='mv -v'
-alias -- 'myip'='ifconfig | grep '\''inet '\'' | grep -v 127.0.0.1 | awk '\''{print \$2}'\'''
-alias -- 'o'='open'
-alias -- 'oo'='open .'
-alias -- 'rm'='rm -i'
-alias -- 'sudo'='sudo '
-alias -- 'ungz'='gunzip -k'
-alias -- 'v'='vim'
-alias -- 'wip'='git commit -m'\''WIP'\'' . && git push origin HEAD'
-alias -- '~'='cd ~'
-alias -- 'f'='open .'
-alias -- 'lg'='lazygit'
-alias -- 'cat'='bat'
-alias -- 'du'='dust'
-alias -- 'df'='duf'
-alias -- 'ls'='eza'
-alias -- 'lzd'='lazydocker'
+# ── Navigation ────────────────────────────────────────────────────────────────
+alias -- -='cd -'
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
+alias 'cd..'='cd ..'
+alias '~'='cd ~'
+
+# ── Files & listing (modern CLI replacements) ───────────────────────────────────
+alias ls='eza'
+alias cat='bat'
+alias du='dust'
+alias df='duf'
+alias cp='cp -v'
+alias mv='mv -v'
+alias rm='rm -i'
+alias o='open'
+alias oo='open .'
+alias f='open .'
+alias ungz='gunzip -k'
+
+# ── Git ──────────────────────────────────────────────────────────────────────
+# Resolve a repo's default branch from origin/HEAD (main, master, trunk, …).
+# Falls back to "main". Requires origin/HEAD to be set:
+#   git remote set-head origin --auto
+git_default_branch() {
+  local ref
+  ref=$(git symbolic-ref --quiet refs/remotes/origin/HEAD 2>/dev/null) \
+    && print -r -- "${ref#refs/remotes/origin/}" \
+    || print -r -- main
+}
+
+alias g='git'
+alias gs='git status'
+alias gss='git status -s'
+alias gd='git diff'
+alias gl='git log'
+alias glp5='git log -5 --pretty --oneline'
+alias glsw='git log -S'                      # pickaxe: commits touching a string
+alias glt='git log --all --graph --decorate --oneline --simplify-by-decoration'
+alias gsl='git shortlog -sn'
+alias gb='git branch'
+alias gbr="git branch --no-color | sed -e '/^[^*]/d' -e 's/* \(.*\)/\1/'"  # current branch name
+alias gc='git checkout'
+alias gcm='git checkout "$(git_default_branch)"'
+alias gcmp='b=$(git_default_branch); git checkout "$b" && git pull origin "$b"'
+alias ggmp='git checkout -'                  # back to previous branch
+alias gm='git commit -m'
+alias gam='git commit -am'
+alias gap='git add -p'
+alias gp='git push origin HEAD'
+alias gpo='git push origin'
+alias gpt='git push origin HEAD && git push --tags'
+alias gpu='git pull origin HEAD --prune'
+alias gst='git stash'
+alias gdtp='git stash pop'
+alias gchp='git cherry-pick'
+alias gcl='git clone'
+alias gcln='git clean -xfd'
+alias gf='git reflog'
+alias gra='git remote add'
+alias grr='git remote rm'
+alias gta='git tag -a -m'
+alias gws='git diff --shortstat "@{0 day ago}"'
+alias lg='lazygit'
+# WIP commit (no auto-push — push deliberately with gp).
+alias wip='git add -A && git commit -m WIP'
+
+# ── Docker / Kubernetes ─────────────────────────────────────────────────────────
+alias d='docker'
+alias dc='docker compose'
+alias lzd='lazydocker'
+alias k='kubectl'
+alias kp='kubectl get pods'
+
+# ── Network ─────────────────────────────────────────────────────────────────────
+alias ip='dig +short myip.opendns.com @resolver1.opendns.com'   # public IP
+alias localip='ipconfig getifaddr en0 || ipconfig getifaddr en1' # LAN IP (wifi/eth)
+myip() { ifconfig | awk '/inet / && $2 != "127.0.0.1" { print $2 }' }
+killport() { kill "$(lsof -t -i:"$1")" }
+
+# ── macOS / system ───────────────────────────────────────────────────────────────
+alias flushdns='sudo dscacheutil -flushcache && sudo killall -HUP mDNSResponder'
+alias b64='pbpaste | base64 --decode'
+alias sudo='sudo '   # trailing space lets the next word be alias-expanded too
+
+# ── Editors ──────────────────────────────────────────────────────────────────────
+alias v='vim'

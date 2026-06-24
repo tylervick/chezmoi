@@ -1,5 +1,12 @@
 #!/bin/zsh
 
+# Powerlevel10k instant prompt. Keep at the very top of .zshrc, before anything
+# that may produce console output. If it warns about output, move the offending
+# init below the antidote load, or set POWERLEVEL9K_INSTANT_PROMPT=quiet.
+if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
+  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
+fi
+
 # zsh options
 setopt HIST_FCNTL_LOCK        # Use OS X FCNTL locking to avoid race conditions when writing to history files
 setopt HIST_IGNORE_DUPS
@@ -10,7 +17,7 @@ setopt SHARE_HISTORY          # Share history between all sessions
 setopt EXTENDED_HISTORY       # Save each command's start timestamp and the duration to the history file after it was executed
 unsetopt autocd               # cd is a command, not a directory
 
-# use vim as default editor, vscode as visual editor
+# use vim as default editor, cursor as visual editor
 export VISUAL="cursor --wait"
 export EDITOR="vim"
 
@@ -20,10 +27,15 @@ typeset -gU path cdpath fpath manpath
 # Source zstyles you might use with antidote.
 [[ -e ${ZDOTDIR:-$HOME}/.zstyles ]] && source ${ZDOTDIR:-$HOME}/.zstyles
 
-# Autoload functions you might want to use with antidote.
+# Autoload any functions in $ZFUNCDIR. Guard against an empty/absent dir:
+# with no matches the glob vanishes, leaving a bare `autoload -Uz` that lists
+# all autoload functions to stdout — which trips p10k's instant-prompt warning.
 ZFUNCDIR=${ZDOTDIR:-$HOME}/functions
 fpath=($ZFUNCDIR $fpath)
-autoload -Uz $fpath[1]/*(.:t)
+() {
+  local fns=($ZFUNCDIR/*(N.:t))
+  (( $#fns )) && autoload -Uz $fns
+}
 
 # source antidote from brew
 [[ ! -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]] || source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
@@ -33,5 +45,12 @@ antidote load
 # enable CTRL-T, ALT-C, CTRL-R & fuzzy completion from fzf
 # fzf is installed via brew, but not easily available in antidote: https://github.com/mattmc3/antidote/issues/112
 source <(fzf --zsh)
+
+# history-substring-search key bindings (plugin is otherwise inert without these).
+# Bind both terminfo codes and raw escape sequences for robustness across terminals.
+bindkey "$terminfo[kcuu1]" history-substring-search-up
+bindkey "$terminfo[kcud1]" history-substring-search-down
+bindkey '^[[A' history-substring-search-up
+bindkey '^[[B' history-substring-search-down
 
 # Named Directory Hashes

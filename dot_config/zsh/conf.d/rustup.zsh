@@ -2,4 +2,4 @@
 # rust: configure rust environment
 #
 
-. "$HOME/.cargo/env"
+#. "$HOME/.cargo/env"
