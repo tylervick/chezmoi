@@ -65,4 +65,4 @@
 [user]
 	email = {{ .email | quote }}
 	name = {{ .name | quote }}
-	signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqKXp5NtCzOEeMwZM5msGRy0Jga70SnM0H7JZ0WHtML"
+	signingKey = {{ .signing_key | quote }}

@@ -1,0 +1,15 @@
+# .chezmoiignore.tmpl
+# =============================================================================
+# Paths excluded from the target state. These stay in the repo but are never
+# deployed to $HOME. Profile-conditional blocks exclude profile-specific files.
+
+README.md
+doc
+profiles
+scripts
+
+{{- if ne .profile "work" }}
+# Work-only files — not deployed on personal machines.
+# (Function Health AWS config.) Flip this if you also use AWS personally.
+.aws/config
+{{- end }}

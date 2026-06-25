@@ -4,25 +4,52 @@
 # =============================================================================
 # Used to customize configuration when doing a `chezmoi init`.
 #
-# This template file will trigger prompts to fill-in machine-specific
-# templateable values. The resulting file is then created at
-# `~/.config/chezmoi/chezmoi.toml`
+# Prompts for machine-specific values. The *Once helpers read any value
+# already stored in ~/.config/chezmoi/chezmoi.toml on re-init, so re-running
+# `chezmoi init` does NOT re-prompt. The resulting file is created at
+# `~/.config/chezmoi/chezmoi.toml`.
 # See https://www.chezmoi.io/docs/how-to/
 #
 # {{- /* This file supports Go's text/template language. */}}
 
-# {{- $email := promptString "email address for the user, used for git, aws, etc." }}
-# {{- $name := promptString "full name of user" }}
-# {{- $hostname := promptString "hostname of the machine" }}
-# {{- $age_identity := promptString "age identity key" }}
-# {{- $age_recipient := promptString "age recipient key" }}
+# {{- $profile := promptChoiceOnce . "profile" "Machine profile" (list "work" "personal") }}
+# {{- $hostname := promptStringOnce . "hostname" "hostname of the machine" }}
+
+# {{- /* Profile-derived git identity. Work values are fixed; personal is */}}
+# {{- /* prompted once and cached. */}}
+# {{- $name := "Tyler Vick" }}
+# {{- $email := "" }}
+# {{- $signingKey := "" }}
+# {{- if eq $profile "work" }}
+# {{-   $email = "tyler.vick@functionhealth.com" }}
+# {{-   $signingKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIHqKXp5NtCzOEeMwZM5msGRy0Jga70SnM0H7JZ0WHtML" }}
+# {{- else }}
+# {{-   $email = promptStringOnce . "personal_email" "Personal git email" }}
+# {{-   $signingKey = promptStringOnce . "personal_signing_key" "Personal git signing key (ssh-ed25519 ...)" }}
+# {{- end }}
+
+# {{- /* VM detection — handy for profile/host conditionals later. */}}
+# {{- $hwModel := output "sysctl" "-n" "hw.model" | trim }}
+# {{- $isVM := or (hasPrefix "VMware" $hwModel) (hasPrefix "VirtualMac" $hwModel) (hasPrefix "Parallels" $hwModel) }}
+
+# {{- /* age stays until the Phase 2 migration to 1Password. The identity is a */}}
+# {{- /* PATH to the key file (provisioned out-of-band from 1Password); the */}}
+# {{- /* recipient is a public key. Neither is secret, so both are fixed here. */}}
 encryption = "age"
 
 [data]
-    email = "{{ $email }}"
-    name = "{{ $name }}"
+    profile = "{{ $profile }}"
     hostname = "{{ $hostname }}"
+    is_vm = {{ $isVM }}
+    name = "{{ $name }}"
+    email = "{{ $email }}"
+    signing_key = "{{ $signingKey }}"
+{{- if ne $profile "work" }}
+    # Persisted so promptStringOnce finds them on re-init (personal profile only).
+    personal_email = "{{ $email }}"
+    personal_signing_key = "{{ $signingKey }}"
+{{- end }}
 
 [age]
-    identity = "{{ $age_identity }}"
-    recipient = "{{ $age_recipient }}"
+    identity = "~/.config/chezmoi/key.txt"
+    recipient = "age1cntvrg7afw3xtqdfgh8vaw0yuyfqnrz33q5clfp6sah2k2rgjpmqjj7mhk"

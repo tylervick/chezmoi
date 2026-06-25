@@ -1,0 +1,95 @@
+# ~/.config/homebrew/Brewfile  (XDG-native global Brewfile location)
+# =============================================================================
+# Common packages installed on every profile via `brew bundle`.
+# Profile-specific packages live in profiles/<profile>/homebrew/Brewfile.tmpl
+# and are appended by the includeTemplate at the bottom of this file.
+#
+# `brew bundle --global` resolves this path when XDG_CONFIG_HOME is set.
+# See https://github.com/Homebrew/homebrew-bundle
+
+tap "oven-sh/bun"
+tap "jesseduffield/lazydocker"
+
+cask_args appdir: "~/Applications"
+
+# --- CLI: shell & dotfiles ---------------------------------------------------
+brew "antidote"
+brew "chezmoi"
+brew "mise"
+brew "powerlevel10k"
+# STARSHIP-TODO: a future migration to starship is planned; remove powerlevel10k then.
+brew "age"            # still used by chezmoi until Phase 2 (1Password) lands
+
+# --- CLI: core utils ---------------------------------------------------------
+brew "bat"
+brew "btop"
+brew "coreutils"
+brew "duf"
+brew "dust"
+brew "eza"
+brew "fd"
+brew "fzf"
+brew "htop"
+brew "hunspell"
+brew "iftop"
+brew "jq"
+brew "openssh"
+brew "ripgrep"
+brew "ripgrep-all"
+brew "sqlite"
+brew "tmux"
+brew "tree"
+brew "unzip"
+brew "wget"
+brew "zoxide"
+
+# --- CLI: dev tooling --------------------------------------------------------
+brew "ast-grep"
+brew "bun"
+brew "ffmpeg"
+brew "gh"
+brew "go-task"
+brew "gomodifytags"
+brew "gopls"
+brew "gotests"
+brew "just"
+brew "pkg-config"
+brew "pre-commit"
+
+# --- CLI: containers ---------------------------------------------------------
+brew "colima"
+brew "docker"
+brew "docker-compose"
+brew "docker-credential-helper"
+brew "lazydocker"
+brew "lazygit"
+
+brew "mas"
+
+# --- Casks: shared apps ------------------------------------------------------
+cask "1password", args: { appdir: "/Applications" }
+cask "1password-cli"
+cask "alfred"
+cask "appcleaner"
+cask "bruno"
+cask "cleanshot"
+cask "db-browser-for-sqlite"
+cask "fork"
+cask "ghostty"
+cask "gifox"
+cask "gitbutler"
+cask "istat-menus"
+cask "librewolf"
+cask "notion"
+cask "obsidian"
+cask "rectangle"
+cask "spotify"
+cask "sublime-text"
+cask "thaw"
+cask "utm"
+cask "visual-studio-code"
+cask "vlc"
+cask "yaak"
+
+# --- Profile-specific packages -----------------------------------------------
+{{ includeTemplate (printf "profiles/%s/homebrew/Brewfile.tmpl" .profile) . }}
