@@ -21,6 +21,14 @@ unsetopt autocd               # cd is a command, not a directory
 export VISUAL="cursor --wait"
 export EDITOR="vim"
 
+# Pin the ZLE keymap explicitly. zsh picks the main keymap once at startup from
+# the *inherited* environment: viins if $EDITOR/$VISUAL contains "vi", else emacs.
+# A top-level shell starts with EDITOR unset (→ emacs), but a nested shell (e.g.
+# `chezmoi cd`, tmux panes, zsh-in-zsh) inherits the EDITOR=vim exported above and
+# silently boots into vi mode, where backspace is vi-backward-delete-char. Pinning
+# here makes line editing identical regardless of how the shell was launched.
+bindkey -e
+
 # ensure that path entries are unique
 typeset -gU path cdpath fpath manpath
 

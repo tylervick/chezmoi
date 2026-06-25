@@ -1,0 +1,14 @@
+[[ssh-keys]]
+item = "github.com"
+vault = "Personal"
+
+[[ssh-keys]]
+item = "Function SSH Key"
+vault = "Employee"
+
+[[ssh-keys]]
+item = "Unraid SSH"
+vault = "Personal"
+
+[[ssh-keys]]
+vault = "Personal"
