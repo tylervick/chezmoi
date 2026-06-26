@@ -16,7 +16,11 @@ alias 'cd..'='cd ..'
 alias '~'='cd ~'
 
 # ── Files & listing (modern CLI replacements) ───────────────────────────────────
-alias ls='eza'
+# eza (modern ls). `ls` shows details by default; `lsg` for a quick grid.
+alias ls='eza -l --git --group-directories-first --icons=auto'    # long + git status
+alias la='eza -la --git --group-directories-first --icons=auto'   # long + hidden
+alias lt='eza --tree --level=2 --git --icons=auto'                # tree (2 levels)
+alias lsg='eza --group-directories-first --icons=auto'            # quick grid (no details)
 alias cat='bat'
 alias du='dust'
 alias df='duf'

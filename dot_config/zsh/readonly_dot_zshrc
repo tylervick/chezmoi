@@ -15,7 +15,7 @@ setopt HIST_IGNORE_SPACE      # Ignore commands that start with space
 setopt HIST_EXPIRE_DUPS_FIRST # Expire duplicate entries first when trimming history
 setopt SHARE_HISTORY          # Share history between all sessions
 setopt EXTENDED_HISTORY       # Save each command's start timestamp and the duration to the history file after it was executed
-unsetopt autocd               # cd is a command, not a directory
+setopt AUTO_CD                # type a dir path (../foo, somedir/) to cd into it
 
 # use vim as default editor, cursor as visual editor
 export VISUAL="cursor --wait"

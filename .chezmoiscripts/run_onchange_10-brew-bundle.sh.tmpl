@@ -1,5 +1,16 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-# Brewfile hash: {{ includeTemplate "dot_config/homebrew/Brewfile.tmpl" . | sha256sum }}
-brew bundle --file={{ .chezmoi.homeDir }}/.config/homebrew/Brewfile
+# Install Homebrew packages whenever the rendered Brewfile changes.
+#
+# The Brewfile is embedded below and piped to `brew bundle` via stdin rather
+# than read from ~/.config/homebrew/Brewfile. This avoids a race: chezmoi can
+# run this script before it writes the deployed file in the same apply, which
+# previously made brew bundle act on a STALE Brewfile while chezmoi still
+# recorded the new content hash as "done" — so newly added entries silently
+# never installed. Embedding the content guarantees what we hash (and what
+# triggers a re-run) is exactly what brew bundle installs.
+set -euo pipefail
+brew bundle --file=- <<'BREWFILE'
+{{ includeTemplate "dot_config/homebrew/Brewfile.tmpl" . }}
+BREWFILE
 {{ end -}}
