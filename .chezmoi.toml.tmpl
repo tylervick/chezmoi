@@ -32,11 +32,6 @@
 # {{- $hwModel := output "sysctl" "-n" "hw.model" | trim }}
 # {{- $isVM := or (hasPrefix "VMware" $hwModel) (hasPrefix "VirtualMac" $hwModel) (hasPrefix "Parallels" $hwModel) }}
 
-# {{- /* age stays until the Phase 2 migration to 1Password. The identity is a */}}
-# {{- /* PATH to the key file (provisioned out-of-band from 1Password); the */}}
-# {{- /* recipient is a public key. Neither is secret, so both are fixed here. */}}
-encryption = "age"
-
 [data]
     profile = "{{ $profile }}"
     hostname = "{{ $hostname }}"
@@ -49,7 +44,3 @@ encryption = "age"
     personal_email = "{{ $email }}"
     personal_signing_key = "{{ $signingKey }}"
 {{- end }}
-
-[age]
-    identity = "~/.config/chezmoi/key.txt"
-    recipient = "age1cntvrg7afw3xtqdfgh8vaw0yuyfqnrz33q5clfp6sah2k2rgjpmqjj7mhk"
