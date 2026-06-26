@@ -7,3 +7,9 @@
 
 export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
 ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
+
+# mise shims: full `mise activate` lives in .zshrc (interactive only), so
+# non-interactive shells (IDEs, scripts, Claude Code, cron) never get it.
+# Shims on PATH here make mise-managed tools (node, etc.) resolve everywhere.
+# https://mise.jdx.dev/dev-tools/shims.html
+export PATH="$HOME/.local/share/mise/shims:$PATH"
