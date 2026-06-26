@@ -1,0 +1,13 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Screenshot defaults. trap restarts only SystemUIServer when this changes.
+set -eufo pipefail
+trap 'killall SystemUIServer' EXIT
+
+defaults write com.apple.screencapture location -string "${HOME}/Desktop"
+defaults write com.apple.screencapture type -string "png"        # Tahoe defaults to HEIC on HDR Macs; force PNG
+defaults write com.apple.screencapture disable-shadow -bool true
+
+# Saved to the Desktop. To group them into a pile, enable Desktop Stacks:
+# Finder → View → Use Stacks (⌃⌘0). There is no reliable defaults key for it.
+{{ end -}}

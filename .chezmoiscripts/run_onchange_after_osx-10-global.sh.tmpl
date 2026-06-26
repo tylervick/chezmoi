@@ -1,0 +1,42 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# macOS global defaults (NSGlobalDomain + keyboard/text). No app restart —
+# most of these apply to apps on next launch, and some only after logout.
+set -eufo pipefail
+
+# --- Appearance / Finder-adjacent globals ---
+defaults write -g AppleInterfaceStyle -string "Dark"
+defaults write -g AppleShowAllExtensions -bool true
+
+# --- Keyboard ---
+defaults write -g ApplePressAndHoldEnabled -bool false   # key-repeat instead of accent menu (some apps override in their own domain)
+defaults write -g AppleKeyboardUIMode -int 2             # full keyboard access (3 is stale; 2 is current)
+defaults write -g KeyRepeat -int 2                       # fast key repeat (below System Settings' min)
+defaults write -g InitialKeyRepeat -int 15               # short delay before repeat
+
+# --- Text input: kill the "smart" substitutions ---
+defaults write -g NSAutomaticSpellingCorrectionEnabled -bool false
+defaults write -g NSAutomaticQuoteSubstitutionEnabled -bool false
+defaults write -g NSAutomaticCapitalizationEnabled -bool false
+defaults write -g NSAutomaticDashSubstitutionEnabled -bool false
+defaults write -g NSAutomaticPeriodSubstitutionEnabled -bool false
+defaults write -g NSUseSpellCheckerForCompletions -bool false
+
+# --- Save / print panels ---
+defaults write -g NSDocumentSaveNewDocumentsToCloud -bool false
+defaults write -g NSNavPanelExpandedStateForSaveMode -bool true
+defaults write -g NSNavPanelExpandedStateForSaveMode2 -bool true
+defaults write -g PMPrintingExpandedStateForPrint -bool true
+defaults write -g PMPrintingExpandedStateForPrint2 -bool true
+
+# --- Pointer: tap-to-click (needs -currentHost or it silently no-ops) ---
+defaults -currentHost write -g com.apple.mouse.tapBehavior -int 1
+
+# --- Region ---
+defaults write -g AppleMeasurementUnits -string "Inches"
+defaults write -g AppleMetricUnits -bool false
+defaults write -g AppleLanguages -array "en"
+defaults write -g AppleLocale -string "en_US@currency=USD"
+
+echo "Global defaults set. Log out/in for keyboard, locale, and pointer settings to fully apply."
+{{ end -}}

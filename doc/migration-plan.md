@@ -49,30 +49,65 @@ dot_config/git/readonly_config.tmpl # profile-aware identity + signing key
 Removed entirely on request: `openapi-generator`, `session-manager-plugin`,
 `goreleaser`, `vhs`.
 
-## Phase 2 — Secrets: age → 1Password  ⬜ (next)
+## Phase 2 — Secrets: right-size encryption, then remove age  ✅
 
-Prereq: a dedicated 1Password vault (e.g. `chezmoi`), `op` CLI signed in.
+**Audit finding (2026-06):** age was over-applied. An audit of every managed
+secret showed almost nothing is actually sensitive:
 
-| Current `*.age` file | Contents | Plan |
+| File | Genuinely secret? | Disposition |
 |---|---|---|
-| `git/encrypted_allowed_ssh_signers.age` | Public SSH keys | **Demote to plaintext** — not secret |
-| `private_1Password/.../encrypted_readonly_agent.toml.age` | SSH-agent vault config | **Plaintext / light template** — not a credential |
-| iStat Menus `*.plist` (4) | App prefs incl. license | **1P document** → `onepasswordDocument` template |
-| Ice `.plist` | App prefs | **1P document** (or plaintext if no secret) |
+| `jira.zsh` | No — already used an `op://` reference; no longer needed | **Removed** ✅ |
+| `git/.../allowed_ssh_signers` | No — public keys | **age → plaintext** (`readonly_`) ✅ |
+| `private_1Password/.../agent.toml` | No — just vault/item *names* | **age → plaintext** (`readonly_`) ✅ |
+| iStat Menus `*.plist` (main + menubar.7) | **Yes — license keys** | Stay encrypted ⏸ (see below) |
+| iStat status/agent, Ice `*.plist` | No license/serial data | Stay encrypted ⏸ (bundled) |
 
-Then remove `encryption = "age"` + `[age]` block and the age prompts from
-`.chezmoi.toml.tmpl`.
+### Done in this pass ✅
+- Removed `jira.zsh` (obsolete; was already 1Password-native via `op://`).
+- Demoted `allowed_ssh_signers` and `agent.toml` from age to plaintext —
+  they contain no secrets. age now encrypts **only** the 5 plists.
 
-⚠️ Seed 1P items **before** deleting `.age` files; verify
-`chezmoi apply --dry-run` resolves every `onepasswordDocument` first.
+### Plist decision — resolved via Option A ✅
+The only genuine secrets were iStat Menus **license keys** inside binary plists
+that can't be cleanly field-templated — also the "frequently-changing plists"
+that caused perpetual drift. Resolution:
 
-## Phase 3 — Structure & docs  ⬜
+- [x] Saved the iStat license to 1Password (personal account, item
+      "iStat Menus License").
+- [x] Untracked all 5 plists (`git rm` the `encrypted_*.age` files); live
+      `~/Library/Preferences/*.plist` left untouched.
+- [x] Removed `encryption = "age"` + the `[age]` block from `.chezmoi.toml.tmpl`.
+- [ ] **You:** `chezmoi init` (regenerate age-free config) + `rm ~/.config/chezmoi/key.txt`.
 
-- Move `run_*` scripts into `.chezmoiscripts/` with numbered names.
-- Add `doc/architecture.md`, `doc/profiles.md`, `doc/secrets.md`; expand README.
+> Net: age is gone, no plaintext key on disk, no more plist drift, license safe
+> in 1Password. To restore iStat on a new machine, paste the key back from 1P.
+
+## Phase 3 — Structure & docs  ✅
+
+- [x] Moved `run_*` scripts into `.chezmoiscripts/` with numbered names
+      (`run_once_before_00-install-homebrew`, `run_onchange_10-brew-bundle`).
+- [x] Added `doc/architecture.md`, `doc/profiles.md`, `doc/secrets.md`,
+      `doc/README.md` (index); expanded the top-level `README.md`.
+
+## macOS defaults  ✅
+
+Added `.chezmoiscripts/run_onchange_after_osx-*.sh.tmpl` (10-global, 20-dock,
+30-finder, 40-trackpad, 50-screenshots, 60-controlcenter, 70-safari). Pattern
+adapted from twpayne's own dotfiles (chezmoi author), chosen over Prevole:
+
+- `run_onchange_` (not `run_once_`) so edits re-apply.
+- Per-app `trap 'killall <App>' EXIT` — each script restarts only its own app,
+  only when it changed. No blanket "restart everything" script.
+- `set -eufo pipefail`; gated with `{{ if eq .chezmoi.os "darwin" }}`.
+
+Settings ported from the old nix-config set, verified against macOS 26 Tahoe.
+Fixes applied: `AppleKeyboardUIMode` 3→2; `tapBehavior` needs `-currentHost`;
+`AppleLanguages` single-element; battery % via `controlcenter`. Dropped as
+dead: `QLEnableTextSelection`, `-g AppleShowAllFiles` (wrong domain),
+screensaver `askForPassword` (MDM-only now). Safari writes need Full Disk
+Access (disclaimed in-script). Old `ssd.sh` power tweaks intentionally skipped.
 
 ## Deferred extras
 
 - `scripts/setup.d/` sourced bootstrap pipeline with `_utils.sh` logging.
-- `run_once_osx-*` macOS `defaults write` scripts.
 - `.chezmoiexternal.toml` for nerd fonts.

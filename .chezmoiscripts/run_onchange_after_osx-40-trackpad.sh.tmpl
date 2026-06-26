@@ -1,0 +1,19 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Trackpad defaults. Written to BOTH the multitouch and bluetooth-driver
+# domains (macOS reads different ones in different contexts). These generally
+# need a logout to take effect, so no app restart here.
+#
+# Verified on this machine (macOS 26): TrackpadThreeFingerDrag is still the
+# correct key (the UI just moved it under Accessibility → Pointer Control).
+# Two-finger right-click (TrackpadRightClick) is already the default, so it's
+# intentionally omitted.
+set -eufo pipefail
+
+for domain in com.apple.AppleMultitouchTrackpad com.apple.driver.AppleBluetoothMultitouch.trackpad; do
+  defaults write "$domain" Clicking -bool true               # tap to click
+  defaults write "$domain" TrackpadThreeFingerDrag -bool true
+done
+
+echo "Trackpad defaults set. Log out/in for them to take effect."
+{{ end -}}

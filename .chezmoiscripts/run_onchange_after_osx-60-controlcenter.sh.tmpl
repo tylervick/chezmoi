@@ -1,0 +1,9 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Control Center / menu bar. The old com.apple.menuextra.battery key is a
+# no-op since Big Sur; battery % now lives in controlcenter (-currentHost).
+set -eufo pipefail
+trap 'killall ControlCenter' EXIT
+
+defaults -currentHost write com.apple.controlcenter BatteryShowPercentage -bool true
+{{ end -}}

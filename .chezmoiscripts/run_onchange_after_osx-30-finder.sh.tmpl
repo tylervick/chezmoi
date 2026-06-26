@@ -1,0 +1,32 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Finder defaults. trap restarts only Finder when this script changes.
+set -eufo pipefail
+trap 'killall Finder' EXIT
+
+defaults write com.apple.finder AppleShowAllFiles -bool true            # show hidden files (correct domain; NOT NSGlobalDomain)
+defaults write com.apple.finder AppleShowAllExtensions -bool true
+defaults write com.apple.finder FXEnableExtensionChangeWarning -bool false
+defaults write com.apple.finder FXPreferredViewStyle -string "clmv"     # column view
+defaults write com.apple.finder _FXShowPosixPathInTitle -bool false     # NOTE: flaky on Tahoe; verify it sticks
+defaults write com.apple.finder ShowPathbar -bool true
+defaults write com.apple.finder ShowStatusBar -bool true
+
+# New Finder windows open at $HOME
+defaults write com.apple.finder NewWindowTarget -string "PfLo"
+defaults write com.apple.finder NewWindowTargetPath -string "file://${HOME}/"
+
+# Show drives / servers / removable media on the desktop
+defaults write com.apple.finder ShowExternalHardDrivesOnDesktop -bool true
+defaults write com.apple.finder ShowRemovableMediaOnDesktop -bool true
+defaults write com.apple.finder ShowMountedServersOnDesktop -bool true
+
+# Don't litter network/USB volumes with .DS_Store (com.apple.desktopservices;
+# applies after logout — killall Finder above won't pick these up immediately).
+defaults write com.apple.desktopservices DSDontWriteNetworkStores -bool true
+defaults write com.apple.desktopservices DSDontWriteUSBStores -bool true
+
+# DROPPED: QLEnableTextSelection — dead since OS X El Capitan.
+# Desktop Stacks (to group screenshots) has no reliable defaults key —
+# enable via Finder menu: View → Use Stacks (⌃⌘0).
+{{ end -}}

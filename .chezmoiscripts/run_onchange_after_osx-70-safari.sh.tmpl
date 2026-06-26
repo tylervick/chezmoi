@@ -1,0 +1,21 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Safari developer defaults.
+#
+# ⚠️  Safari's preference domain is TCC-protected. These writes SILENTLY FAIL
+#     unless the terminal running chezmoi has FULL DISK ACCESS:
+#       System Settings → Privacy & Security → Full Disk Access → add your
+#       terminal (Ghostty/Terminal/iTerm), then relaunch it before applying.
+#     If you'd rather not grant FDA, enable the Develop menu manually instead:
+#       Safari → Settings → Advanced → "Show features for web developers".
+#
+# Not force-restarting Safari (would drop your tabs) — quit/reopen Safari for
+# these to take effect.
+set -eufo pipefail
+
+defaults write com.apple.Safari IncludeDevelopMenu -bool true
+defaults write com.apple.Safari IncludeInternalDebugMenu -bool true
+defaults write com.apple.Safari WebKitDeveloperExtrasEnabledPreferenceKey -bool true
+defaults write com.apple.Safari UniversalSearchEnabled -bool false
+defaults write com.apple.Safari AutoOpenSafeDownloads -bool false
+{{ end -}}

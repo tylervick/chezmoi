@@ -1,0 +1,14 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# Dock defaults. trap restarts only Dock, only when this script's content
+# changes (run_onchange = chezmoi re-runs only on change).
+set -eufo pipefail
+trap 'killall Dock' EXIT
+
+defaults write com.apple.dock autohide -bool true
+defaults write com.apple.dock show-recents -bool false
+defaults write com.apple.dock launchanim -bool true
+defaults write com.apple.dock orientation -string "left"
+defaults write com.apple.dock tilesize -int 48
+defaults write com.apple.dock mineffect -string "genie"
+{{ end -}}
