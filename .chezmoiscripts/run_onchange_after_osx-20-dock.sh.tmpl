@@ -1,14 +1,63 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
-# Dock defaults. trap restarts only Dock, only when this script's content
-# changes (run_onchange = chezmoi re-runs only on change).
+# Dock: behavior + declarative layout (via dockutil), profile-aware.
+# trap restarts Dock once at the end; run_onchange => only runs when this
+# script's rendered content changes.
 set -eufo pipefail
 trap 'killall Dock' EXIT
 
+# --- behavior ---
 defaults write com.apple.dock autohide -bool true
 defaults write com.apple.dock show-recents -bool false
 defaults write com.apple.dock launchanim -bool true
 defaults write com.apple.dock orientation -string "left"
 defaults write com.apple.dock tilesize -int 48
 defaults write com.apple.dock mineffect -string "genie"
+
+# --- layout (declarative; rebuilds the whole dock to match the list) ---
+if ! command -v dockutil >/dev/null 2>&1; then
+  echo "dockutil not installed yet — skipping dock layout (applies after brew bundle)."
+  exit 0
+fi
+
+# Resolve an app by name across the dirs apps actually land in (~/Applications
+# because of the Brewfile's cask appdir, plus the system locations).
+app_path() {
+  local name="$1" dir
+  for dir in "$HOME/Applications" "/Applications" "/System/Applications" "/System/Applications/Utilities"; do
+    if [ -d "$dir/$name.app" ]; then printf '%s' "$dir/$name.app"; return 0; fi
+  done
+  echo "WARN: $name.app not found — skipping dock entry" >&2
+  return 1
+}
+
+# Ordered app list: common, then profile-specific.
+apps=(
+  "Safari"
+  "Firefox"
+  "Ghostty"
+  "Cursor"
+  "Sublime Text"
+  "1Password"
+{{ if eq .profile "work" -}}
+  "Slack"
+  "Notion"
+  "Linear"
+  "Fork"
+{{ else -}}
+  "Spotify"
+  "Obsidian"
+{{ end -}}
+  "System Settings"
+)
+
+dockutil --no-restart --remove all >/dev/null 2>&1 || true
+for name in "${apps[@]}"; do
+  if path="$(app_path "$name")"; then
+    dockutil --no-restart --add "$path" >/dev/null
+  fi
+done
+
+# Downloads stack on the right.
+dockutil --no-restart --add "$HOME/Downloads" --view fan --display folder --sort dateadded >/dev/null 2>&1 || true
 {{ end -}}
