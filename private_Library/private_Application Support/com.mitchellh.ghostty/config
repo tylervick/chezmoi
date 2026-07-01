@@ -1,4 +1,54 @@
+# Ghostty configuration
+# Ergonomics-only: no font override, no transparency. See doc/terminal.md.
+
+# ─── Claude Code / editing keybinds ──────────────────────────────────────────────
 copy-on-select = true
 keybind = command+k=text:\x0c
 keybind = shift+enter=text:\n
 cursor-click-to-move = true
+
+# ─── Theme ──────────────────────────────────────────────────────────────────────
+# Auto-switch with macOS appearance: Latte (light) / Mocha (dark). Ships with Ghostty.
+theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+window-theme = auto
+
+# ─── Window ───────────────────────────────────────────────────────────────────────
+window-padding-x = 12
+window-padding-y = 10
+window-padding-balance = true
+window-save-state = always
+window-inherit-working-directory = true
+
+# ─── Quick terminal (quake mode) ──────────────────────────────────────────────────
+# Slides up from the bottom; toggle globally from any app with ctrl+`.
+quick-terminal-position = bottom
+quick-terminal-autohide = true
+quick-terminal-animation-duration = 0.12
+keybind = global:ctrl+grave_accent=toggle_quick_terminal
+
+# ─── Splits + vim-style navigation ────────────────────────────────────────────────
+keybind = super+enter=new_split:right
+keybind = super+shift+enter=new_split:down
+keybind = super+h=goto_split:left
+keybind = super+j=goto_split:down
+keybind = super+k=goto_split:up
+keybind = super+l=goto_split:right
+unfocused-split-fill = #1e1e2e
+
+# ─── Scrollback + shell integration ───────────────────────────────────────────────
+scrollback-limit = 10000000
+shell-integration = detect
+shell-integration-features = no-cursor
+resize-overlay = after-first
+
+# ─── Clipboard + paste safety ─────────────────────────────────────────────────────
+clipboard-paste-protection = true
+clipboard-trim-trailing-spaces = true
+mouse-hide-while-typing = true
+
+# ─── macOS ──────────────────────────────────────────────────────────────────────
+# Send Option as Alt (escape sequences) instead of macOS special characters.
+macos-option-as-alt = true
+
+# ─── Tabs ─────────────────────────────────────────────────────────────────────────
+keybind = super+shift+r=prompt_tab_title
