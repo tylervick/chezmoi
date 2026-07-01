@@ -61,4 +61,15 @@ bindkey "$terminfo[kcud1]" history-substring-search-down
 bindkey '^[[A' history-substring-search-up
 bindkey '^[[B' history-substring-search-down
 
+# Word-deletion ergonomics. Re-assert emacs keymap *after* antidote load: the
+# bindkey -e near the top runs before plugins, and the keymap ends up back on
+# viins by the first prompt (zsh auto-selects vi from EDITOR=vim). Pinning here
+# makes option+delete map to backward-kill-word.
+bindkey -e
+# Treat path separators (/ . - etc.) as word boundaries so option+delete
+# (^[^?) kills one path segment instead of the whole `~/.config/something`.
+# Default WORDCHARS counts / . ~ as word chars, swallowing the entire path.
+autoload -Uz select-word-style
+select-word-style bash
+
 # Named Directory Hashes
