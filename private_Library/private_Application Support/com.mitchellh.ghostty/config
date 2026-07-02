@@ -9,7 +9,7 @@ cursor-click-to-move = true
 
 # ─── Theme ──────────────────────────────────────────────────────────────────────
 # Auto-switch with macOS appearance: Latte (light) / Mocha (dark). Ships with Ghostty.
-theme = light:Catppuccin Latte,dark:Catppuccin Mocha
+#theme = light:Catppuccin Latte,dark:Catppuccin Mocha
 window-theme = auto
 
 # ─── Window ───────────────────────────────────────────────────────────────────────
