@@ -38,6 +38,7 @@ $ZDOTDIR/conf.d/brew.zsh
 $ZDOTDIR/conf.d/history.zsh
 $ZDOTDIR/conf.d/mise.zsh
 $ZDOTDIR/conf.d/zoxide.zsh
+$ZDOTDIR/conf.d/gcloud.zsh
 $ZDOTDIR/conf.d/jira.zsh
 $ZDOTDIR/conf.d/rustup.zsh
 $ZDOTDIR/conf.d/colima.zsh
