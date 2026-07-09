@@ -4,3 +4,8 @@
 #
 
 zstyle ':antidote:bundle' use-friendly-names 'yes'
+
+# Completion style applied by ez-compinit (case-insensitive matching with case
+# correction, partial-word matching on ./_/-, menu select, approximate matching).
+# Available styles: gremlin, ohmy, prez, zshzoo — see `compstyle -l`.
+zstyle ':plugin:ez-compinit' 'compstyle' 'zshzoo'
