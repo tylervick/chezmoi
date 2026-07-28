@@ -3,13 +3,14 @@
 # Packages installed ONLY on the "work" profile (Function Health Mac).
 # Appended to the common Brewfile by dot_config/homebrew/Brewfile.tmpl.
 
+tap "databricks/tap"
 tap "superset-sh/tap"
 
 brew "awscli"
+brew "databricks/tap/databricks"
 brew "superset-sh/tap/superset"
 
 cask "figma"
-cask "google-cloud-sdk"   # gcloud / gsutil / bq
+cask "gcloud-cli"   # gcloud / gsutil / bq
 cask "linear"
 cask "superset"
-
