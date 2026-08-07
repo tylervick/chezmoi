@@ -7,9 +7,6 @@
 # `brew bundle --global` resolves this path when XDG_CONFIG_HOME is set.
 # See https://github.com/Homebrew/homebrew-bundle
 
-tap "oven-sh/bun"
-tap "jesseduffield/lazydocker"
-
 cask_args appdir: "~/Applications"
 
 # --- CLI: shell & dotfiles ---------------------------------------------------
@@ -46,13 +43,14 @@ brew "zoxide"
 
 # --- CLI: dev tooling --------------------------------------------------------
 brew "ast-grep"
-brew "bun"
+brew "oven-sh/bun/bun", trusted: true
 brew "ffmpeg"
 brew "gh"
 brew "go-task"
 brew "gomodifytags"
 brew "gopls"
 brew "gotests"
+brew "herdr"      # terminal agent multiplexer
 brew "just"
 brew "pkg-config"
 brew "pre-commit"
@@ -62,7 +60,7 @@ brew "colima"
 brew "docker"
 brew "docker-compose"
 brew "docker-credential-helper"
-brew "lazydocker"
+brew "jesseduffield/lazydocker/lazydocker", trusted: true
 brew "lazygit"
 
 brew "dockutil"   # declarative Dock layout (osx-20-dock script)
@@ -86,6 +84,7 @@ cask "istat-menus"
 cask "librewolf"
 cask "notion"
 cask "obsidian"
+cask "stablyai/orca/orca", trusted: true   # from stablyai/orca tap — IDE for orchestrating AI coding agents
 cask "rectangle"
 cask "spotify"
 cask "sublime-text"
