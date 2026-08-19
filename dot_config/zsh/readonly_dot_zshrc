@@ -48,11 +48,31 @@ fpath=($ZFUNCDIR $fpath)
 # source antidote from brew
 [[ ! -f /opt/homebrew/opt/antidote/share/antidote/antidote.zsh ]] || source /opt/homebrew/opt/antidote/share/antidote/antidote.zsh
 # TODO: determine fallback behavior
+#
+# DEBUG NOTE (seen 2026-07-14): terminal opened to the bare default zsh prompt
+# (%n@%m %1~ %#) instead of powerlevel10k, with NO error printed. Root cause was
+# a truncated static bundle: `antidote load` regenerates ~/.config/zsh/.zsh_plugins.zsh
+# only when it is OLDER than .zsh_plugins.txt (antidote-load line ~55:
+# `[[ ! $staticfile -nt $bundlefile ]]`). antidote writes it with `>|`, which
+# truncates before writing, so an interrupted `antidote bundle` (shell killed /
+# terminal closed mid-write) leaves a 0-byte file with a fresh mtime. That empty
+# cache is newer than the source, so it is never regenerated and gets sourced as
+# an empty file -> zero plugins load, no p10k, no error.
+#
+# If the expected prompt/plugins vanish again, check for an empty static bundle:
+#   wc -c ~/.config/zsh/.zsh_plugins.zsh          # 0 bytes == corrupt
+#   ls -l ~/.config/zsh/.zsh_plugins.{txt,zsh}    # is .zsh newer than .txt?
+# Fix by forcing a regen: rm ~/.config/zsh/.zsh_plugins.zsh(.zwc) and open a new shell.
+# NOT auto-guarded on purpose: we've only seen this once and don't know how often
+# it recurs -- a silent self-heal would hide a real underlying trigger. Leave it loud.
 antidote load
 
 # enable CTRL-T, ALT-C, CTRL-R & fuzzy completion from fzf
 # fzf is installed via brew, but not easily available in antidote: https://github.com/mattmc3/antidote/issues/112
-source <(fzf --zsh)
+# Deferred via zsh-defer (see conf.d/mise.zsh) — forking `fzf --zsh` costs
+# ~250ms on this machine and the keybindings aren't needed before the first
+# prompt. `-c` defers the process substitution itself, not just the source.
+zsh-defer -c 'source <(fzf --zsh)'
 
 # history-substring-search key bindings (plugin is otherwise inert without these).
 # Bind both terminfo codes and raw escape sequences for robustness across terminals.

@@ -26,6 +26,11 @@ mattmc3/ez-compinit
 ###
 wintermi/zsh-brew
 
+# Loaded explicitly (not just as an implicit `kind:defer` dependency) so the
+# `zsh-defer` function is available to conf.d/ snippets below, which use it
+# directly to push slow `eval "$(tool init)"` calls off the startup path.
+romkatv/zsh-defer
+
 
 ### Local Plugins (conf.d/ snippets + aliases + prompt config)
 #

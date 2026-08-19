@@ -9,6 +9,8 @@
 #
 if (( $+commands[gcloud] )); then
   gcloud_inc="${HOMEBREW_PREFIX:-/opt/homebrew}/share/google-cloud-sdk/completion.zsh.inc"
-  [[ -r "$gcloud_inc" ]] && source "$gcloud_inc"
+  # Deferred via zsh-defer (see conf.d/mise.zsh) — completion isn't needed
+  # before the first prompt.
+  [[ -r "$gcloud_inc" ]] && zsh-defer source "$gcloud_inc"
   unset gcloud_inc
 fi
