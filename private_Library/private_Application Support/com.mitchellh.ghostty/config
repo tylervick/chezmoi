@@ -16,15 +16,20 @@ window-theme = auto
 window-padding-x = 12
 window-padding-y = 10
 window-padding-balance = true
+# Last `window-save-state` in this file wins. Keep `always` for restore-across-
+# launches. To reset a stuck quick-terminal size, comment `always` and uncomment
+# `never` below, relaunch Ghostty, then switch back.
 window-save-state = always
 window-inherit-working-directory = true
 
 # ─── Quick terminal (quake mode) ──────────────────────────────────────────────────
-# Slides up from the bottom; toggle globally from any app with ctrl+`.
-quick-terminal-position = bottom
+# Docks on the left; toggle globally from any app with ctrl+`.
+quick-terminal-position = left
+quick-terminal-size = 45%, 50%
 quick-terminal-autohide = true
 quick-terminal-animation-duration = 0.12
 keybind = global:ctrl+grave_accent=toggle_quick_terminal
+# window-save-state = never   # uncomment (and comment `always` above) to reset size
 
 # ─── Splits + vim-style navigation ────────────────────────────────────────────────
 keybind = super+enter=new_split:right
