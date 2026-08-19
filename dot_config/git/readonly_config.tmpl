@@ -11,6 +11,19 @@
 	autocrlf = input
 	editor = vim
 
+# Managed here rather than left as drift from `gh auth login`, which writes these
+# on first auth. gh acts as git's credential helper for HTTPS remotes/gists; the
+# empty `helper =` first resets any inherited helper before appending gh's. See
+# `gh auth setup-git`. Path is hardcoded (Apple Silicon brew prefix) like the rest
+# of this config.
+[credential "https://github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
+[credential "https://gist.github.com"]
+	helper =
+	helper = !/opt/homebrew/bin/gh auth git-credential
+
 [diff]
 	algorithm = histogram
 	colorMoved = plain
