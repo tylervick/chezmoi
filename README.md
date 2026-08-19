@@ -30,6 +30,7 @@ fresh machine, provision the age key first (see
 - [Profiles](./doc/profiles.md) — `work` / `personal` mechanics
 - [Secrets](./doc/secrets.md) — age + 1Password
 - [Migration plan](./doc/migration-plan.md) — how this setup was reworked
+- [Terminal & Claude Code](./doc/terminal.md) — Ghostty + Claude Code hooks
 
 ## Common commands
 
