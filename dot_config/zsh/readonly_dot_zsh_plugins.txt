@@ -47,6 +47,7 @@ $ZDOTDIR/conf.d/gcloud.zsh
 $ZDOTDIR/conf.d/jira.zsh
 $ZDOTDIR/conf.d/rustup.zsh
 $ZDOTDIR/conf.d/colima.zsh
+$ZDOTDIR/conf.d/revyl.zsh
 
 
 ### Prompt
