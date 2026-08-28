@@ -6,7 +6,7 @@ Documentation for this chezmoi-managed dotfiles repository.
 |---|---|
 | [Architecture](./architecture.md) | Source layout, naming conventions, the `.chezmoiscripts` pipeline |
 | [Profiles](./profiles.md) | `work` / `personal` profiles and how templates use them |
-| [Secrets](./secrets.md) | age encryption, the age key, and 1Password `op://` references |
+| [Secrets](./secrets.md) | Why nothing is encrypted at rest, and 1Password `op://` references |
 | [Terminal & Claude Code](./terminal.md) | Ghostty config + Claude Code statusline and hooks |
 | [Migration plan](./migration-plan.md) | The phased rework that produced this structure |
 

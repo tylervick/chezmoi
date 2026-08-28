@@ -12,8 +12,8 @@ machine.
   `.chezmoiignore.tmpl` decides what is *not* deployed.
 - `.chezmoiscripts/*` run automatically on `chezmoi apply` (install Homebrew,
   `brew bundle`).
-- age encryption is used **only** for a handful of macOS app plists; everything
-  else is plaintext or pulled from 1Password at runtime.
+- Nothing is encrypted at rest — everything tracked here is plaintext; runtime
+  secrets are 1Password `op://` references resolved by `op run`.
 
 ---
 
@@ -21,7 +21,7 @@ machine.
 
 | Path | Purpose |
 |---|---|
-| `.chezmoi.toml.tmpl` | Config template — profile choice, profile-derived git identity, `[age]` block |
+| `.chezmoi.toml.tmpl` | Config template — profile choice, profile-derived git identity |
 | `.chezmoiignore.tmpl` | Paths excluded from the target state (profile-aware) |
 | `.chezmoiscripts/` | Scripts auto-run on apply (never deployed as files) |
 | `profiles/<profile>/` | Per-profile **render-only** data (Brewfile); excluded from target state |
@@ -29,7 +29,7 @@ machine.
 | `dot_config/git/readonly_config.tmpl` | Git config — identity/signing key from profile |
 | `dot_config/zsh/` | Zsh config (zshrc, aliases, p10k, plugins) + modular `conf.d/*.zsh` |
 | `dot_config/…` | Other XDG configs (mise, colima, tmux, pnpm, 1Password SSH agent) |
-| `private_Library/private_Preferences/*.age` | Encrypted macOS app plists (iStat Menus, Ice) |
+| `private_Library/private_Application Support/` | macOS app support files (Ghostty config) |
 | `readonly_dot_zshenv` | `~/.zshenv` — sets `XDG_CONFIG_HOME` and `ZDOTDIR` |
 | `doc/` | This documentation (not deployed) |
 
@@ -44,12 +44,11 @@ chezmoi encodes file attributes in the source filename prefix:
 | `dot_` | Leading `.` (e.g. `dot_config` → `~/.config`) |
 | `private_` | `0600`/`0700` permissions |
 | `readonly_` | Removes write bits (`0444`/`0555`) |
-| `encrypted_` + `.age` | Decrypted with age at apply time |
 | `run_` | Executed, not deployed (see scripts below) |
 | `*.tmpl` | Rendered through Go's `text/template` |
 
-Prefixes stack, e.g. `encrypted_private_com.jordanbaird.Ice.plist.age` →
-encrypted, `0600`, decrypted to `~/Library/Preferences/com.jordanbaird.Ice.plist`.
+Prefixes stack, e.g. `dot_config/git/readonly_config.tmpl` → rendered through
+`text/template` and deployed read-only (`0444`) to `~/.config/git/config`.
 
 ---
 
@@ -88,14 +87,15 @@ never deployed). See [profiles.md](./profiles.md).
 
 ## Secrets
 
-age encrypts only the macOS app plists that carry license keys; non-secret
-files are plaintext, and runtime secrets (e.g. API tokens) use 1Password
-`op://` references resolved by `op run`. See [secrets.md](./secrets.md).
+Nothing in this repo is encrypted at rest — there is no age key and no
+encrypted files. The repo is public, so everything tracked here is assumed
+public. Runtime secrets (e.g. API tokens) use 1Password `op://` references
+resolved by `op run`. See [secrets.md](./secrets.md).
 
 ---
 
 ## Related
 
 - [Profiles](./profiles.md) — profile selection mechanics
-- [Secrets](./secrets.md) — encryption + 1Password
+- [Secrets](./secrets.md) — 1Password `op://` references
 - [Migration plan](./migration-plan.md) — the phased rework this structure came from

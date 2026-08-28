@@ -1,8 +1,8 @@
 # Dotfiles
 
 Personal macOS dotfiles managed with [chezmoi](https://www.chezmoi.io/),
-organized around **profiles** (`work` / `personal`) with age encryption for a
-few app plists and 1Password for runtime secrets.
+organized around **profiles** (`work` / `personal`), with 1Password for
+runtime secrets.
 
 ## Install
 
@@ -10,8 +10,8 @@ few app plists and 1Password for runtime secrets.
 sh -c "$(curl -fsLS get.chezmoi.io)" -- init --apply git@github.com:tylervick/chezmoi.git
 ```
 
-On `chezmoi init` you'll be prompted once for the machine **profile**. For a
-fresh machine, provision the age key first (see
+On `chezmoi init` you'll be prompted once for the machine **profile**. Nothing
+is encrypted at rest, so there is no key material to provision first (see
 [doc/secrets.md](./doc/secrets.md)).
 
 ## Layout at a glance
@@ -28,7 +28,7 @@ fresh machine, provision the age key first (see
 
 - [Architecture](./doc/architecture.md) — structure and conventions
 - [Profiles](./doc/profiles.md) — `work` / `personal` mechanics
-- [Secrets](./doc/secrets.md) — age + 1Password
+- [Secrets](./doc/secrets.md) — 1Password `op://` references
 - [Migration plan](./doc/migration-plan.md) — how this setup was reworked
 - [Terminal & Claude Code](./doc/terminal.md) — Ghostty + Claude Code hooks
 

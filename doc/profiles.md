@@ -122,4 +122,4 @@ This renders the matching profile Brewfile inline. Categorization:
 ## Related
 
 - [Architecture](./architecture.md) — overall structure
-- [Secrets](./secrets.md) — encryption + 1Password
+- [Secrets](./secrets.md) — 1Password `op://` references
