@@ -56,4 +56,12 @@ unset _op_sock
 if [[ -n $CLAUDECODE$CODEX_SANDBOX$CODEX_THREAD_ID$CURSOR_AGENT ]]; then
   export PAGER=cat GIT_PAGER=cat GH_PAGER=cat MANPAGER=cat AWS_PAGER=""
   export GIT_EDITOR=true GIT_TERMINAL_PROMPT=0 HOMEBREW_NO_AUTO_UPDATE=1
+  # Test runners default to ~1 worker per core; several agents running suites
+  # in parallel worktrees saturated all 18 cores (load 40-70) and stalled every
+  # shell. A quarter of the cores each (min 2). VITEST_MAX_WORKERS is native to
+  # vitest 4; JEST_MAX_WORKERS needs jest.config.js support (frontend-mono has it).
+  _w=$(( $(sysctl -n hw.ncpu 2>/dev/null || echo 8) / 4 ))
+  (( _w >= 2 )) || _w=2
+  export VITEST_MAX_WORKERS=${VITEST_MAX_WORKERS:-$_w} JEST_MAX_WORKERS=${JEST_MAX_WORKERS:-$_w}
+  unset _w
 fi
