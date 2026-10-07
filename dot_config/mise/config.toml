@@ -1,7 +1,11 @@
 [tools]
-emsdk = "4.0.19"
+# node must come before emsdk: emsdk's install root contains a `node/`
+# *directory*, and the node shim resolves to the first tool that provides a
+# `node`, so with emsdk first `node` failed with "Permission denied" anywhere
+# no project pinned node (agent/script shells use shims, not `mise activate`).
 go = "1.24.0"
 node = "22.20.0"
+emsdk = "4.0.19"
 python = "3.12.11"
 rust = "1.80.1"
 shellcheck = "latest"
