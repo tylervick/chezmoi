@@ -15,7 +15,6 @@ brew "chezmoi"
 brew "mise"
 brew "powerlevel10k"
 # STARSHIP-TODO: a future migration to starship is planned; remove powerlevel10k then.
-brew "age"            # still used by chezmoi until Phase 2 (1Password) lands
 
 # --- CLI: core utils ---------------------------------------------------------
 brew "bat"
@@ -43,7 +42,7 @@ brew "zoxide"
 
 # --- CLI: dev tooling --------------------------------------------------------
 brew "ast-grep"
-brew "oven-sh/bun/bun", trusted: true
+brew "bun"
 brew "ffmpeg"
 brew "gh"
 brew "go-task"
@@ -52,7 +51,7 @@ brew "gopls"
 brew "gotests"
 brew "herdr"      # terminal agent multiplexer
 brew "just"
-brew "pkg-config"
+brew "pkgconf"
 brew "pre-commit"
 
 # --- CLI: containers ---------------------------------------------------------
@@ -60,7 +59,7 @@ brew "colima"
 brew "docker"
 brew "docker-compose"
 brew "docker-credential-helper"
-brew "jesseduffield/lazydocker/lazydocker", trusted: true
+brew "lazydocker"
 brew "lazygit"
 
 brew "dockutil"   # declarative Dock layout (osx-20-dock script)
