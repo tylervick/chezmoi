@@ -1,0 +1,2 @@
+# Targets removed from $HOME on apply (left behind by renames/deletions in source).
+.config/zsh/conf.d/revyl.zsh

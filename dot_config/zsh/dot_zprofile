@@ -1,0 +1,10 @@
+#!/bin/zsh
+#
+# .zprofile - login shells only (Orca, Ghostty, `zsh -l`), after /etc/zprofile.
+#
+
+# /etc/zprofile's path_helper just moved /etc/paths.d entries (/opt/homebrew/bin
+# among them) ahead of the user entries set in ~/.zshenv, so Homebrew's python3
+# etc. shadowed the mise shims. Re-run .zshenv to put them back in front;
+# `typeset -U path` keeps it from duplicating anything.
+source $HOME/.zshenv

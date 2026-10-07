@@ -6,6 +6,9 @@ copy-on-select = true
 keybind = command+k=text:\x0c
 keybind = shift+enter=text:\n
 cursor-click-to-move = true
+# A blinking cursor makes Ghostty redraw at the display refresh rate (120Hz on
+# ProMotion): ~10-15% CPU vs ~1% steady. https://github.com/ghostty-org/ghostty/discussions/10397
+cursor-style-blink = false
 
 # ─── Theme ──────────────────────────────────────────────────────────────────────
 # Auto-switch with macOS appearance: Latte (light) / Mocha (dark). Ships with Ghostty.

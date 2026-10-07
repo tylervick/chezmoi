@@ -9,3 +9,9 @@ zstyle ':antidote:bundle' use-friendly-names 'yes'
 # correction, partial-word matching on ./_/-, menu select, approximate matching).
 # Available styles: gremlin, ohmy, prez, zshzoo — see `compstyle -l`.
 zstyle ':plugin:ez-compinit' 'compstyle' 'zshzoo'
+
+# Skip compinit's full function/security scan (~35ms, and seconds when EDR
+# file hooks are contended) except once every 20h; in between use the cached
+# dump via `compinit -C` (~11ms). Newly installed completions show up within a
+# day, or immediately after `run-compinit -f`.
+zstyle ':plugin:ez-compinit' 'use-cache' 'yes'

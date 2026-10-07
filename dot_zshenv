@@ -1,0 +1,59 @@
+#!/bin/zsh
+#
+# .zshenv - Zsh environment file, loaded always.
+#
+
+# NOTE: .zshenv needs to live at ~/.zshenv, not in $ZDOTDIR!
+
+export XDG_CONFIG_HOME=${XDG_CONFIG_HOME:-$HOME/.config}
+ZDOTDIR=${ZDOTDIR:-$XDG_CONFIG_HOME/zsh}
+
+# Homebrew: the static output of `brew shellenv`, so no shell pays for forking
+# it (~50ms, far more when EDR file hooks are contended).
+if [[ -d /opt/homebrew ]]; then
+  export HOMEBREW_PREFIX=/opt/homebrew
+  export HOMEBREW_CELLAR=/opt/homebrew/Cellar
+  export HOMEBREW_REPOSITORY=/opt/homebrew
+  export INFOPATH="/opt/homebrew/share/info:${INFOPATH:-}"
+  fpath=(/opt/homebrew/share/zsh/site-functions $fpath)
+fi
+
+# PATH, for every shell (interactive or not: IDEs, scripts, agents, cron).
+# mise shims come first so mise-managed tools (node, python, …) beat
+# Homebrew's copies without `mise activate`, which only runs in interactive
+# shells (.zshrc). https://mise.jdx.dev/dev-tools/shims.html
+#
+# Login shells then run /etc/zprofile, whose path_helper moves /etc/paths.d
+# entries (including /opt/homebrew/bin) back in front of the shims, so
+# $ZDOTDIR/.zprofile sources this file again to restore the order.
+#
+# User bin dirs are appended, not prepended, so they can't shadow Homebrew
+# (e.g. a stale ~/.local/bin/claude). Installers like revyl and maestro write
+# their PATH line to ~/.zshrc / ~/.bash_profile, which zsh never reads with
+# ZDOTDIR set, so their dirs are owned here. (N/) skips missing dirs; with
+# `typeset -U` the first occurrence of a duplicate wins.
+typeset -gU path fpath
+path=(
+  $HOME/.local/share/mise/shims
+  /opt/homebrew/bin(N/)
+  /opt/homebrew/sbin(N/)
+  $path
+  $HOME/.local/bin(N/)
+  $HOME/.revyl/bin(N/)
+  $HOME/.maestro/bin(N/)
+)
+
+# 1Password SSH agent. ~/.ssh/config's IdentityAgent covers plain ssh, but
+# ssh-add, docker/colima agent forwarding, and anything else that reads
+# SSH_AUTH_SOCK directly would otherwise get macOS's empty launchd agent.
+_op_sock="$HOME/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+[[ -S $_op_sock ]] && export SSH_AUTH_SOCK=$_op_sock
+unset _op_sock
+
+# AI agent shells (Claude Code, Codex, Cursor's agent): never block on a pager,
+# an editor, or a credential prompt, and don't let brew auto-update mid-task.
+# Not keyed on ORCA_* — Orca sets those in human terminals too.
+if [[ -n $CLAUDECODE$CODEX_SANDBOX$CODEX_THREAD_ID$CURSOR_AGENT ]]; then
+  export PAGER=cat GIT_PAGER=cat GH_PAGER=cat MANPAGER=cat AWS_PAGER=""
+  export GIT_EDITOR=true GIT_TERMINAL_PROMPT=0 HOMEBREW_NO_AUTO_UPDATE=1
+fi

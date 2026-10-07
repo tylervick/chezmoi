@@ -24,7 +24,6 @@ mattmc3/ez-compinit
 
 ### Regular Plugins
 ###
-wintermi/zsh-brew
 
 # Loaded explicitly (not just as an implicit `kind:defer` dependency) so the
 # `zsh-defer` function is available to conf.d/ snippets below, which use it
@@ -46,7 +45,6 @@ $ZDOTDIR/conf.d/zoxide.zsh
 $ZDOTDIR/conf.d/gcloud.zsh
 $ZDOTDIR/conf.d/rustup.zsh
 $ZDOTDIR/conf.d/colima.zsh
-$ZDOTDIR/conf.d/revyl.zsh
 
 
 ### Prompt
