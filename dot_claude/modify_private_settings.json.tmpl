@@ -1,0 +1,34 @@
+#!/bin/sh
+#
+# ~/.claude/settings.json has several writers besides chezmoi: Claude Code
+# itself (/model, /config, /plugin), Orca and herdr (which install hooks for
+# every event). Owning the whole file meant every apply rolled back their
+# changes. Instead this modify_ script merges only the keys we manage
+# (.chezmoitemplates/claude-settings.json) into whatever is on disk:
+#   - non-hook keys: deep-merged, ours win (`model` is left to /model)
+#   - hooks: our entries are appended to each event if not already present;
+#     other tools' entries are kept as-is.
+# chezmoi passes the current file on stdin and writes stdout back.
+#
+
+managed=$(cat <<'JSON'
+{{ includeTemplate "claude-settings.json" . }}
+JSON
+)
+
+current=$(cat)
+[ -n "$current" ] || current='{}'
+
+JQ=$(command -v jq || echo /opt/homebrew/bin/jq)
+if [ ! -x "$JQ" ]; then
+  # Fresh machine before brew bundle: leave the file untouched.
+  printf '%s\n' "$current"
+  exit 0
+fi
+
+printf '%s' "$current" | "$JQ" --argjson m "$managed" '
+  (. * ($m | del(.hooks)))
+  | .hooks = (reduce (($m.hooks // {}) | to_entries[]) as $e (.hooks // {};
+      .[$e.key] = ((.[$e.key] // []) as $have
+        | $have + [$e.value[] | select(. as $x | any($have[]; . == $x) | not)])))
+'

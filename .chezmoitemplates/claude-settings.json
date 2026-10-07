@@ -1,0 +1,72 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "skillOverrides": {
+    "orchestration": "off"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "bunx ccstatusline@2.2.30",
+    "padding": 0,
+    "refreshInterval": 10
+  },
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "fh-common@function-ai-dev-kit": true,
+    "fh-backend@function-ai-dev-kit": false,
+    "slack@claude-plugins-official": true
+  },
+  "extraKnownMarketplaces": {
+    "function-ai-dev-kit": {
+      "source": {
+        "source": "github",
+        "repo": "Function-Health/function-ai-dev-kit"
+      },
+      "autoUpdate": true
+    }
+  },
+  "alwaysThinkingEnabled": true,
+  "modelSettings": {
+    "claude-opus-5": {
+      "effortLevel": "medium"
+    }
+  },
+  "autoUpdatesChannel": "stable",
+  "minimumVersion": "2.1.198",
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
+  },
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "dark-daltonized",
+  "editorMode": "normal",
+  "preferredNotifChannel": "auto",
+  "agentPushNotifEnabled": true,
+  "skipAutoPermissionPrompt": true,
+  "voiceEnabled": true,
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-dangerous-bash.sh"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/notify-stop.sh"
+          }
+        ]
+      }
+    ]
+  }
+}
