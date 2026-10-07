@@ -24,13 +24,16 @@ machine.
 | `.chezmoi.toml.tmpl` | Config template — profile choice, profile-derived git identity |
 | `.chezmoiignore.tmpl` | Paths excluded from the target state (profile-aware) |
 | `.chezmoiscripts/` | Scripts auto-run on apply (never deployed as files) |
+| `.chezmoitemplates/` | Shared template fragments (e.g. the managed Claude Code settings) |
+| `.chezmoiremove` | Targets deleted from `$HOME` on apply (cleanup after source renames/deletions) |
 | `profiles/<profile>/` | Per-profile **render-only** data (Brewfile); excluded from target state |
 | `dot_config/homebrew/Brewfile.tmpl` | Common Brewfile; appends the profile Brewfile via `includeTemplate` |
 | `dot_config/git/readonly_config.tmpl` | Git config — identity/signing key from profile |
-| `dot_config/zsh/` | Zsh config (zshrc, aliases, p10k, plugins) + modular `conf.d/*.zsh` |
+| `dot_config/zsh/` | Zsh config (zprofile, zshrc, aliases, p10k, plugins) + modular `conf.d/*.zsh` |
+| `dot_claude/` | Claude Code hooks + `modify_` script that merges managed keys into `settings.json` |
 | `dot_config/…` | Other XDG configs (mise, colima, tmux, pnpm, 1Password SSH agent) |
 | `private_Library/private_Application Support/` | macOS app support files (Ghostty config) |
-| `readonly_dot_zshenv` | `~/.zshenv` — sets `XDG_CONFIG_HOME` and `ZDOTDIR` |
+| `dot_zshenv` | `~/.zshenv` — `XDG_CONFIG_HOME`, `ZDOTDIR`, PATH, Homebrew env, `SSH_AUTH_SOCK`, agent-shell env (all shells) |
 | `doc/` | This documentation (not deployed) |
 
 ---
@@ -59,11 +62,14 @@ Scripts run automatically by chezmoi, ordered by name within each trigger type.
 | Script | Trigger | Action |
 |---|---|---|
 | `run_once_before_00-install-homebrew.sh.tmpl` | Once ever, before apply | Install Homebrew if missing (macOS) |
-| `run_onchange_10-brew-bundle.sh.tmpl` | When its rendered content changes | `brew bundle` against `~/.config/homebrew/Brewfile` |
+| `run_onchange_10-brew-bundle.sh.tmpl` | When its rendered content changes | `brew bundle --file=-` with the rendered Brewfile on stdin |
+| `run_onchange_after_osx-*.sh.tmpl` | When their rendered content changes | macOS `defaults` (global, Dock, Finder, trackpad, screenshots, Control Center, Safari) |
 
-The `run_onchange` script embeds `{{ includeTemplate "dot_config/homebrew/Brewfile.tmpl" . | sha256sum }}`
-— hashing the **rendered** Brewfile (common + profile) so any package change,
-including a profile-specific one, re-triggers `brew bundle`.
+The brew-bundle script embeds the **rendered** Brewfile (common + profile)
+verbatim and pipes it to `brew bundle`, so any package change, including a
+profile-specific one, changes the script and re-triggers it. Embedding (rather
+than reading `~/.config/homebrew/Brewfile`) avoids racing chezmoi writing that
+file in the same apply.
 
 Trigger reference:
 
